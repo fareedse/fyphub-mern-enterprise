@@ -1,0 +1,15 @@
+import express from 'express';
+import { body } from 'express-validator';
+import { changePassword, dashboard, deleteMyInquiry, myInquiries, myInquiry, updateMyInquiry, updateProfile } from '../controllers/userController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { validate } from '../middleware/validate.js';
+const router = express.Router();
+router.use(protect);
+router.get('/dashboard', dashboard);
+router.get('/inquiries', myInquiries);
+router.get('/inquiries/:id', myInquiry);
+router.put('/inquiries/:id', updateMyInquiry);
+router.delete('/inquiries/:id', deleteMyInquiry);
+router.put('/profile', updateProfile);
+router.put('/password', [body('currentPassword').notEmpty().withMessage('Current password required'), body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters')], validate, changePassword);
+export default router;

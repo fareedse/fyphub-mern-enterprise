@@ -1,0 +1,6 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import api,{getError} from '../../api/client';
+import { Empty } from '../../components/UI';
+export default function AdminProjects(){const [items,setItems]=useState([]);const load=()=>api.get('/admin/projects').then(r=>setItems(r.data.items));useEffect(()=>{load()},[]);const del=async(id)=>{if(!confirm('Delete project?'))return;try{await api.delete(`/admin/projects/${id}`);toast.success('Deleted');load()}catch(e){toast.error(getError(e))}};return <><div className="admin-header"><h1>Projects</h1><Link className="btn primary" to="/admin/projects/new">Add Project</Link></div>{items.length?<div className="table-wrap"><table><thead><tr><th>Title</th><th>Category</th><th>Price</th><th>Status</th><th>Featured</th><th>Actions</th></tr></thead><tbody>{items.map(p=><tr key={p._id}><td>{p.title}</td><td>{p.category}</td><td>{p.price}</td><td>{p.status}</td><td>{p.featured?'Yes':'No'}</td><td><Link className="btn small" to={`/admin/projects/${p._id}/edit`}>Edit</Link> <button className="btn small danger" onClick={()=>del(p._id)}>Delete</button></td></tr>)}</tbody></table></div>:<Empty title="No projects added yet"/>}</>}

@@ -1,0 +1,3 @@
+import { useEffect, useState } from 'react';
+import api from '../../api/client';
+export default function AdminDashboard(){const [d,setD]=useState({stats:{},recentInquiries:[]});useEffect(()=>{api.get('/admin/stats').then(r=>setD(r.data))},[]);return <><h1>Admin Overview</h1><div className="dash-grid">{Object.entries(d.stats||{}).map(([k,v])=><div className="stat" key={k}><b>{v}</b><p>{k}</p></div>)}</div><h2>Recent Inquiries</h2><div className="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Status</th><th>Project</th></tr></thead><tbody>{d.recentInquiries?.map(i=><tr key={i._id}><td>{i.name}</td><td>{i.phone}</td><td>{i.status}</td><td>{i.projectTitle||i.projectType}</td></tr>)}</tbody></table></div></>}

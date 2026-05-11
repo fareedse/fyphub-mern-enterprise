@@ -1,0 +1,5 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../api/client';
+import { Loading, Empty } from '../components/UI';
+export default function Blogs(){const [items,setItems]=useState([]),[loading,setLoading]=useState(true),[search,setSearch]=useState('');useEffect(()=>{const id=setTimeout(()=>{setLoading(true);api.get('/blogs',{params:{search}}).then(r=>setItems(r.data.items)).finally(()=>setLoading(false))},250);return()=>clearTimeout(id)},[search]);return <section className="section"><div className="container"><h1 className="page-title">FYP Guides & Blogs</h1><input className="input" placeholder="Search blogs..." value={search} onChange={e=>setSearch(e.target.value)}/><br/><br/>{loading?<Loading rows={3}/>:items.length?<div className="card-grid">{items.map(b=><article className="card" key={b._id}><img className="project-img" src={b.featuredImage}/><span className="badge">{b.category}</span><h3>{b.title}</h3><p className="muted">{b.excerpt}</p><p>{b.author} • {b.readTime}</p><Link className="btn dark" to={`/blogs/${b.slug}`}>Read More</Link></article>)}</div>:<Empty title="No blogs found"/>}</div></section>}

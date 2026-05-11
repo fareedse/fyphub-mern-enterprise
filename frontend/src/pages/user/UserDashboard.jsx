@@ -1,0 +1,5 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../../api/client';
+import ProjectCard from '../../components/ProjectCard';
+export default function UserDashboard(){const [d,setD]=useState({inquiries:[],recommended:[]});useEffect(()=>{api.get('/user/dashboard').then(r=>setD(r.data))},[]);return <><h1>Student Dashboard</h1><div className="dash-grid"><div className="stat"><b>{d.inquiries?.length||0}</b><p>Recent Inquiries</p></div><div className="stat"><b>{d.recommended?.length||0}</b><p>Recommended</p></div><div className="stat"><b>24/7</b><p>Support</p></div><div className="stat"><b>Fast</b><p>Delivery</p></div></div><h2>My Recent Inquiries</h2><div className="table-wrap"><table><tbody>{d.inquiries?.map(i=><tr key={i._id}><td>{i.projectTitle||i.projectType}</td><td>{i.status}</td><td><Link to={`/dashboard/inquiries/${i._id}`}>View</Link></td></tr>)}</tbody></table></div><h2>Recommended Projects</h2><div className="card-grid">{d.recommended?.map(p=><ProjectCard key={p._id} project={p}/>)}</div></>}
