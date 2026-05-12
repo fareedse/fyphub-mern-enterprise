@@ -23,7 +23,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 500 }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.get('/health', (_req, res) => res.json({ success: true, service: 'FYP Hub API', time: new Date().toISOString() }));
+app.get('/', (_req, res) => res.json({ success: true, service: 'FYP Hub API', message: 'Backend is running', time: new Date().toISOString() }));
+app.get(['/api', '/api/'], (_req, res) => res.json({
+  success: true,
+  message: 'FYP Hub API root. Use /api/auth, /api/user, /api/admin, /api/upload, /api/projects, /api/blogs, /api/categories, /api/site-settings, /api/inquiries',
+  health: 'ok',
+}));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
